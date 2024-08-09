@@ -57,7 +57,7 @@ viewsRouter.get("/products", passport.authenticate("jwt", {session:false}), Allo
 
         //enviamos la información a la vista
         res.render("products", 
-        {productos: products, user: user});
+        {productos: products.payload, user: user});
     }catch(error){
         req.logger.error(`Error interno del servidor en ${req.url} - ${new Date().toLocaleTimeString()}`);
         res.status(500).send({error: "Error interno del servidor"});

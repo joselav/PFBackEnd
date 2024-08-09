@@ -18,7 +18,7 @@ class ProductController{
 
             //Si funciona, es decir, si sucess== true, se envía la respuesta.
             if(product.success){ 
-            res.status(200).send(product.message)} else {
+            return product.message } else {
                 throw new Error("Error al cargar datos");}
             }
             catch(error){
