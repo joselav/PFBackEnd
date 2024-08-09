@@ -18,12 +18,11 @@ class ProductController{
 
             //Si funciona, es decir, si sucess== true, se envía la respuesta.
             if(product.success){ 
-            return product.message;} else {
-                throw new Error("Error al cargar datos");}
+            return product.message;}
             }
             catch(error){
                 req.logger.error(`Error en ${req.url} - ${new Date().toLocaleTimeString()}`);
-                throw error;
+                console.error(error)
             }
     }
 
