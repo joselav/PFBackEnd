@@ -1,0 +1,17 @@
+<div class="welcome">
+<a href="/home">Ir a Home</a>
+<a href="/products">Ir a Productos</a>
+<a href="/api/sessions/logout">Cerrar Sesión</a>
+</div>
+
+<h2>TICKET DE COMPRA</h2>
+
+<p>Gracias por confiar en nosotros {{user}}</p>
+<p>Aquí está el detalle de tu compra:</p>
+<ul>
+    <li>Código de compra: {{ticket.code}}</li>
+    <li>Fecha de compra: {{ticket.purchase_datetime}}</li>
+    <li>Email de compra: {{ticket.purchaser}}</li>
+    <li>Monto total: {{ticket.amount}}</li>
+</ul>
+

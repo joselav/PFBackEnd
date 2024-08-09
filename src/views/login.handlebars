@@ -1,0 +1,18 @@
+<div class="log">
+<h2>Inicio de sesión</h2>
+
+<form action="/api/sessions/login" method="POST">
+
+<label for="email"><p>Correo Electrónico:</p></label>
+<input type="text" required name="email" id="email">
+
+<label for="password"><p>Contraseña:</p></label>
+<input type="password" required name="password" id="password">
+
+<button type="submit">Iniciar sesión</button>
+
+<p>¿Aún no te has registrado? <a href="/register">Registrarse</a></p>
+<a href="/api/sessions/github"><button type="button">Iniciar sesión con GitHub</button></a>
+
+</form>
+</div>

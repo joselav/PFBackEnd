@@ -1,0 +1,143 @@
+const ProductModel = require("../models/products.model.js");
+
+class ProductManager {
+
+ //El método getProducts debe leer el archivo de productos y devolver todos los productos en formato de arreglo.
+    async getProducts(limit, page, sort, category){
+        //definimos que query por defecto esté vacío
+        let query = {}
+
+        //En caso de que nos envíen la categoría desde las rutas, cambiamos a que query sea igual a categoría
+        if(category){
+            query.category = category; 
+        }
+
+        //Esperamos a que paginate reciba la información que estamos pidiendole
+        const products = await ProductModel.paginate(query, {limit, page, sort:{price: sort === "desc" ? -1 : 1 }});
+
+
+
+        //pasamos la infomación a Object para que se pueda leer correctamente la información y compararla con la de la base de datos
+        const prod = products.docs.map(pr =>{
+            const {_id, ...rest} = pr.toObject();
+            return rest;
+        })
+
+
+        //Si no existe información en lo que se nos ha pedido, enviamos mensjae de error
+        if(!products){
+             return {sucess:false, message: "No se han encontrado productos"}; }
+
+
+        //creamos como se debe mostrar la información;
+        //El método GET deberá devolver un objeto con el siguiente formato:
+        // {
+        // 	status:success/error
+        // payload: Resultado de los productos solicitados
+        // totalPages: Total de páginas
+        // prevPage: Página anterior
+        // nextPage: Página siguiente
+        // page: Página actual
+        // hasPrevPage: Indicador para saber si la página previa existe
+        // hasNextPage: Indicador para saber si la página siguiente existe.
+        // prevLink: Link directo a la página previa (null si hasPrevPage=false)
+        // nextLink: Link directo a la página siguiente (null si hasNextPage=false)
+        // }
+
+        const resultado = {
+            status: products.status,
+            payload: prod,
+            hasNextPage: products.hasNextPage,
+            hasPrevPage: products.hasPrevPage,
+            prevPage: products.prevPage,
+            nextPage: products.nextPage,
+            page: products.page,
+            totalPages: products.totalPages,
+            prevLink: products.hasPrevPage ? `/api/products?page=${products.prevPage}` : null,
+            nextLink: products.hasNextPage ? `/api/products?page=${products.nextPage}` : null
+        }
+
+
+        //Devolvemos el mensaje con la información correspondiente
+        return {success: true, message:resultado}
+    }
+
+    async getProductsByID(id){
+        //Esta función debe buscar en el arreglo el producto que coincida con el ID que se indica
+
+        const productID = await ProductModel.findById(id);
+
+        if(!productID){
+            return {success: false, message: 'NOT FOUND. No hay producto existente con ese número de ID.'}
+        }
+
+        //Le apliqué un sucess= true y un Message para poder llamarlo más fácil en el app.js. También le agregué un JSON.Stringify porque sino salia [object Object].
+        return {success:true, message: `Se ha encontrado el producto con id ${productID.id}: ${JSON.stringify(productID)}`};
+    }
+
+   async addProduct({title, description, price, thumbnail, code, category, stock}){
+
+    try{
+
+        const validate = title && description && price && code && category && stock;
+        //Verificación que expresa que si no existe alguno de los campos, no se agregue el producto hasta que no se complete. 
+     if(!validate){
+        console.error("no ha sido posible subir producto, controla". error)
+       // return {success: false, message:"Todos los campos, a excepción del Thumbnails, son obligatorios"};
+         }
+       
+         //Verigicación para que el código sea único.
+        //El método "some()" sirve para verificar si al menos un elemento en el arreglo cumple con la condición expecificada. 
+        //En este caso si el código ingresado en el nuevo producto ya existe en la base de datos, por ejemplo. 
+        //data llama a la constante que lee la ruta "products" hace referencia al nombre del arreglo dentro de la ruta.
+
+        const productExist = await ProductModel.findOne({code: code})
+
+        if(productExist){
+            return {success: false, message: 'El código (code) ingresado ya existe en nuestra base de datos. Por favor, ingrese uno que sea único.'}
+        }
+
+         
+        //Recibo los datos y los ordeno dentro de un nuevo objeto de productos. 
+        const newProduct = await ProductModel.create({
+            title, description, price, thumbnail, code, stock,category, status:true //Valor predeterminado, booleano. 
+        }); 
+
+        return {success: true, message: `El producto se ha creado exitosamente ${newProduct}`}}
+
+        catch(error){
+            console.error("Error al agregar producto:", error);
+            return { success: false, message: "Ha ocurrido un error al agregar el producto. Por favor, inténtalo de nuevo más tarde." };
+        }
+    }
+
+    async updateProduct(id,product){
+        //El producto a actualizar primero debe leer el archivo, buscar el ID al que se llama y tomar acción desde ahí en adelante.
+       const updateProdu = await ProductModel.findByIdAndUpdate(id, product);
+
+       if(!updateProdu){
+        console.log("No se ha encontrado producto.")
+        return null
+       }       
+
+   
+    return {success: true, message: `Se ha actualizado el producto exitosamente: ${updateProdu}`};
+
+    }
+
+    async deleteProduct(id){
+        //En este caso, se nos pide que; dependiendo que ID se llame, el producto se elimine completamente
+        const deleteProd = await ProductModel.findByIdAndDelete(id);
+
+        if(!deleteProd){
+            return {success: false, message: `Producto con id ${deleteProd.id} no encontrado o inexistente.`}
+        }
+
+        return {success: true, message: 'Producto eliminado exitosamente', deletedProduct: deleteProd};
+    }
+}
+
+//export default ProductManager;
+
+//versión sin importación ("type": "module"):
+module.exports = ProductManager;

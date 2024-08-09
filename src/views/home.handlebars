@@ -1,0 +1,16 @@
+<div class="welcome">
+   <p>¡Bienvenido {{user.first_name}}, {{user.last_name}}! Tu rol es: {{user.rol}}</p>
+   <button><a href="/api/sessions/logout">Cerrar sesión</a></button> 
+</div><br><br>
+
+<div>
+
+{{#if (eq user.rol 'admin')}}
+       <a href="/realtimeproducts"><button>Modificar Productos</button></a>
+   {{else if (eq user.rol 'user')}}
+       <a href="/products"><button>Ver Productos</button></a>
+       <a href="/chat"><button>Ingresar al Chat</button></a>
+       <a href="/carrito"><button>Ver Productos en Carrito</button></a>
+{{/if}}
+
+</div>

@@ -1,0 +1,282 @@
+*{
+    background-color: antiquewhite;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.ls {
+    color: rgb(87, 50, 28);
+    text-align: center;
+    padding: 20px;
+    margin: auto;
+}
+
+.listd {
+    text-align: center;
+    color: rgb(87, 50, 28);
+    font-size: 30px;
+    font-weight: 700;
+    padding: 15px;
+}
+.filter{
+    width: 80%;
+    margin: auto;
+}
+
+#FormFilter {
+    display: grid;
+    grid-template-columns: 25% 50% 25%;
+    gap: 10px;
+}
+
+#filterSubmit{
+   margin: auto;
+   margin-top: 7px;
+   width: 60%;
+}
+
+#listProd {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    width: 90%;
+    margin: auto;
+}
+
+
+.prods {
+    width: 90%;
+    height: auto;
+    margin: 15px auto;
+    padding: 25px;
+    background-color: antiquewhite;
+    border: .3px solid rgb(71, 33, 0);
+    border-radius: 15px;
+}
+
+.prods h2 {
+    color: rgb(60, 34, 1);
+    text-align: center;
+    font-size: 30px;
+    padding: 5px;
+}
+
+.prods p {
+    color: rgb(146, 84, 48);
+    text-align: center;
+    font-size: 16px;
+    padding: 3px;
+}
+
+.prods h4{ 
+    color: rgb(77, 35, 11);
+    font-size: 20px;
+    text-align: center;
+}
+
+.add{
+    color: rgb(87, 50, 28);
+    text-align: center;
+    padding: 20px;
+    margin: auto;
+}
+
+.numput {
+    width: 20%;
+    margin: auto;
+}
+
+#idForms {
+    width: 480px;
+    margin: auto;
+    background-color: rgb(244, 222, 194);
+    padding: 30px;
+}
+
+label p {
+    color: rgb(60, 34, 1);
+    font-size: 20px;
+    font-weight: 600;
+    padding: 5px;
+    
+}
+
+input{
+    padding: 6px;
+    background-color: rgb(253, 237, 216);
+    border-radius: 13px;
+    border: 1px solid rgb(60, 34, 1);
+}
+
+button {
+    margin: auto;
+    margin-top: 20px;
+    padding: 8px;
+    background-color: rgb(60, 34, 1);
+    color: rgb(244, 222, 194);
+    border-radius: 13px;
+    font-size: 17px;
+    font-weight: 500;
+}
+
+button:hover {
+    background-color: rgb(244, 222, 194);
+    color:  rgb(60, 34, 1);
+    font-weight: 600;
+}
+
+div.paginate{
+    width: 50%;
+    margin: auto;
+    display: grid;
+    grid-template-columns: auto auto auto;
+    grid-template-areas: a b c;
+    padding-top: 30px;
+    padding-bottom: 120px;
+}
+
+div.prevPage a p{
+    text-align: right;
+    color: red;
+    font-size: 15px;
+    grid-area: a;
+}
+
+div.nextPage a p{
+    text-align: left;
+    grid-area: c;
+    color: red;
+    font-size: 15px;
+}
+
+div.pages{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+div.pages p{
+    text-align: center;
+    color: black;
+    grid-area: b;
+}
+
+
+#listCarrito{
+    width: 80%;
+    margin: auto;
+    font-size: 20px;
+    color: rgb(156, 94, 8);
+}
+
+
+div.produs{
+    background-color: cadetblue;
+}
+
+div.log{
+    width: 60%;
+    margin: auto;
+}
+
+div.welcome {
+    display: flex;
+    margin: auto;
+    width: 40%;
+    justify-content: center;
+    align-items: center;
+}
+
+div.welcome p {
+    padding-top: 23px;
+    text-align: center;
+}
+
+div.welcome button{
+    width: 50%;
+    height: 40px;
+}
+
+div.welcome button a{
+    background-color: transparent;
+    color: white;
+    text-decoration: none;
+    font-size: 13px;
+}
+
+div.welcome button a:hover{
+    color: black;
+}
+
+.cart{
+    width: 55px;
+    height: 55px;
+    margin: auto;
+    display: flex;
+    margin-left: 50px;
+    margin-top: 15px;
+}
+.cart:hover{
+    background-color: rgba(236, 190, 134, 0.291);
+    width: 55px;
+    height: 55px;
+    margin: auto;
+    margin-left: 50px;
+    margin-top: 15px;
+    border-radius: 10px;
+}
+.pcart{
+    background-color: transparent;
+    color: rgb(60, 39, 21);
+    font-weight: bold;
+    margin-top: 5px;
+    font-size: 20px;
+}
+.imgcart{
+    background-color: transparent;
+    width: 40px;
+    height: 40px;
+}
+
+.ppd{
+    width: 50%;
+    display: flex;
+    margin: auto;
+    justify-content: center;
+}
+
+.cantcart {
+    width: 300px;
+    margin: auto;
+    text-align: center;
+    color: rgb(75, 46, 11);
+    font-weight: bold;
+}
+
+.cantcart p{
+    padding-top: 15px;
+}
+.cantcart span{
+    color: rgb(224, 104, 104);
+    font-size: 22px;
+}
+
+
+.btncar{
+    width: 300px;
+    margin: auto;
+}
+
+a{
+    color: rgb(50, 34, 5);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+a:hover{
+    color: rgb(250, 201, 145);
+    background-color:rgb(50, 34, 5) ;
+    border-radius: 20px;
+    text-align: center;
+    padding: 10px;
+}

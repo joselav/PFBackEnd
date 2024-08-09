@@ -1,0 +1,24 @@
+<div class="log">
+<h2>Página de Registro</h2><br><br>
+
+<form action="/api/sessions" method="POST">
+    <label for="first_name"><p>Nombre:</p></label>
+    <input type="text" required name="first_name"><br>
+
+    <label for="last_name"><p>Apellido:</p></label>
+    <input type="text" required name="last_name"><br>
+
+    <label for="age"><p>Edad:</p></label>
+    <input type="number" required name="age"><br>
+
+    <label for="email"><p>Correo Electrónico:</p></label>
+    <input type="text" required name="email"><br>
+
+    <label for="password"><p>Contraseña:</p></label>
+    <input type="password" required name="password"><br>
+
+    <button type="submit">Registrarse</button>
+    <a href="/api/sessions/github"><button type="button">Iniciar sesión con GitHub</button></a>
+    
+</form>
+</div>

@@ -1,0 +1,39 @@
+<h1 class="add">Agregar producto</h1>
+<form id="idForms">
+    <label for="title"><p>Título</p></label>
+    <input type="text" required id="title" name="title">
+
+    <label for="description"><p>Descripción</p></label>
+    <input type="text" required id="description" name="description">
+
+    <label for="price"><p>Precio</p></label>
+    <input type="price" required id="price" name="price">
+
+    <label for="thumbnail"><p>Imágen</p></label>
+    <input type="text"  name="thumbnail" id="thumbnail" value="Sin imágen" readonly>
+    
+    <label for="code"><p>Código Personal</p></label>
+    <input type="text" required id="code" name="code">
+
+    <label for="stock"><p>Stock</p></label>
+    <input type="number" required id="stock" name="stock">
+
+    <button type="submit">Enviar producto</button>
+</form>
+
+
+<p class="listd">Listado de Productos</h2>
+<div id="listProd">
+    {{#each productos.payload}}
+    <div class="prods" id="producto_{{this.id}}">
+        <h2>{{this.title}}</h2>
+        <p>REF: {{this.code}} </p>
+        <h4>{{this.description}}</h4>
+        <p>Stock: {{this.stock}}</p>
+        <button class="delete-button" data-id="{{this.id}}">Eliminar</button>
+    </div>
+    {{/each}}
+</div>
+
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+<script src="./js/main.js"></script>

@@ -1,0 +1,99 @@
+<div class="welcome">
+   <p>¡Bienvenido {{user.first_name}}, {{user.last_name}}! Tu rol es: {{user.rol}}</p>
+   <button><a href="/api/sessions/logout">Cerrar sesión</a></button> 
+   <a href="/carrito"><div class="cart">
+    <p class="pcart">{{user.cartCount}}</p>
+    <img src="./img/bolso.png" alt="carrito de compras" class="imgcart">
+   </div></a>
+   
+</div><br><br>
+
+<h1 class="ls">Listado de productos</h1>
+
+<div class="filter">
+  <form id="FormFilter">
+  <div class="sort">
+      <label for="sort">Filtrar por precio:</label>
+      <select name="sort" id="Sort">
+        <option value="">Seleccione una opción</option>
+        <option value="asc">Ascendente</option>
+        <option value="desc">Descendiente</option>
+    </select>
+  </div>
+
+  <div class="category">
+    <label for="category">Categoría:</label>
+    <select name="category" id="Category">
+        <option value="">Seleccione una opción</option>
+        <option value="CerealesYPastas">Cereales y Pastas</option>
+        <option value="HuevosYLacteos">Lácteos</option>
+        <option value="Panaderia">Pánadería</option>
+        <option value="Endulzantes">Endulzantes</option>
+        <option value="AceitesYVinagres">Aceites y Vinagres</option>
+        <option value="FrutasYVerduras">Frutas y Verduras</option>
+        <option value="CafeTe">Cafés y Tés</option>
+        <option value="Carnes">Carnes y Aves</option>
+        <option value="Conservas">Conservas y Enlatados</option>
+        <option value="Limpieza">Producto de Limpieza</option>
+        <option value="Bebidas">Bebidas</option>
+        <option value="CuidadoPersonal">Cuidado Personal</option>
+        <option value="Salsas">Salsas y Condimentos</option>
+        <option value="Dulces">Dulces y Chocolates</option>
+    </select>
+  </div>
+
+  <button id="filterSubmit" type="submit">Aplicar Filtros</button>
+  </form>
+</div>
+<div id="listProd">
+    {{#each productos.payload}}
+    <div class="prods">
+        <h2>{{this.title}}</h2>
+        <p>REF: {{this.code}} </p>
+        <h4>{{this.description}}</h4>
+        <p>Stock: {{this.stock}}</p>
+        <p>Price: {{this.price}}</p>
+        <form action="/carts/{{../user.cart}}/products/{{this.id}}" method="POST">
+            <input type="number" name="quantity" value="1" min="1" step="1" class="numput">
+            <button type="submit">Agregar al carrito</button>
+        </form>
+    </div>
+    {{/each}}
+</div>
+
+<div class="paginate">
+    {{#if productos.message.hasPrevPage }}
+        <div class="prevPage">
+        <a href="/products?page={{productos.message.prevPage}}"><p>Página Anterior</p></a>
+        </div>
+    {{/if}}
+
+    <div class="pages">
+       
+            {{#if productos.message.hasPrevPage}}
+             <div>
+            <a href="/products?page={{productos.message.prevPage}}"><p> {{productos.message.prevPage}} </p></a>
+            </div>
+            {{/if}}
+        
+        
+        <div>
+             <a href="/products?page={{productos.message.page}}"><p> {{productos.message.page}}</p></a>
+        </div>
+   
+            {{#if productos.message.hasNextPage}}
+            <div><a href="/products?page={{productos.message.nextPage}}"><p>{{productos.message.nextPage}}</a></p></div>
+
+            {{/if}}
+    </div>
+
+    {{#if productos.message.hasNextPage}}
+        <div class="nextPage">
+        <a href="/products?page={{productos.message.nextPage}}"><p>Página Siguiente</p></a>
+        </div>
+    {{/if}}
+
+</div>
+
+
+<script src="./js/products.js"></script>

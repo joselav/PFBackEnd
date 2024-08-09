@@ -1,0 +1,57 @@
+<br>
+<div class="welcome">
+<a href="/home">Ir a Home</a>
+<a href="/products">Ir a Productos</a>
+<a href="/api/sessions/logout">Cerrar Sesión</a>
+</div>
+<br><br>
+<div id="listCarrito">
+    {{#if carrito}}
+        <h2>Contenido del Carrito</h2><br><br>
+    {{else}}
+        <p>No hay datos de carrito disponibles.</p>
+    {{/if}}
+
+{{#each carrito.carts}}
+    <h3>Carrito ID: {{_id}}</h3><br>
+    
+    {{#if products.length}}
+        <div>
+        {{#each products}}
+        <div class="ppd">
+            <div class="ppdlist">
+            <ul>
+            <p>Stock del producto {{this.id_prod.stock}}</p>
+            <li>Producto: {{this.id_prod.title}}</li>
+            <li>Cantidad: {{this.quantity}}</li>
+            </ul>
+            </div>
+            <div class="ppddelete"> 
+                <form action="/carts/{{../_id}}/products/{{this.id_prod._id}}/delete" method="POST">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="submit">Eliminar producto</button>
+                </form>
+
+            </div>
+        </div><br>
+        {{/each}} 
+         </div><br>
+    {{else}}
+        <p>No hay productos en este carrito.</p>
+    {{/if}}
+{{/each}}
+
+   <div class="cantcart">
+    <p>Total de cantidades: <span>{{carrito.totalQuantity}}</span></p>
+    <p>Total de precio: <span>€{{carrito.totalPrice}}</span></p><br><br>
+   </div>
+      
+ {{#each carrito.carts}}
+    <form action="/carts/{{_id}}/purchase" method="POST">
+        <div class="btncar">
+            <button type="submit">Finalizar compra</button>
+        </div>
+    </form>
+{{/each}}
+
+</div>
