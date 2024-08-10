@@ -26,9 +26,14 @@ class CartController{
         let totalQuantity = 0;
         let totalPrice = 0;
 
-        const cartss = cart.message;
+        // const cartss = cart.message;
 
-        cartss.forEach(cart => {
+        // Filtra carritos que tienen productos
+        const filteredCarts = cart.message.filter(cart => cart.products.length > 0);
+
+        console.log("filterede",filteredCarts)
+
+        filteredCarts.forEach(cart => {
             cart.products.forEach(product => {
                 totalQuantity += product.quantity;
                 const price = Number(product.id_prod.price);
@@ -40,7 +45,7 @@ class CartController{
             });
         });
 
-        const carts= JSON.parse(JSON.stringify(cartss));
+        const carts= JSON.parse(JSON.stringify(filteredCarts));
 
         const response = { carts, totalPrice: totalPrice.toFixed(2), totalQuantity };
 

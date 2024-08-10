@@ -34,6 +34,10 @@ viewsRouter.get("/products", passport.authenticate("jwt", {session:false}), Allo
 
         const cart = req.user.cart.toString();
 
+        console.log("req.user=", req.user);
+
+        console.log("req.user.cart=",req.user.cart)
+
         const cartID = await CartModel.findById(cart); 
 
         console.log("carrito!!!", req.user.cart.toString())
@@ -81,7 +85,7 @@ viewsRouter.get("/home", passport.authenticate("jwt", {session:false}), async(re
 viewsRouter.get("/carrito", async (req, res) => {
     try {
         // Llamamos la información del carrito desde el controlador
-        await cData.getCartsViews(req, res);
+       const cart = await cData.getCartsViews(req, res);
 
         // No es necesario hacer nada más aquí, la función getCartsViews
         // manejará la respuesta al cliente.
