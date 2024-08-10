@@ -32,11 +32,11 @@ viewsRouter.get("/products", passport.authenticate("jwt", {session:false}), Allo
         console.log('Productos para vista:', products); // Debug
 
 
-        const cart = req.user.cart;
+        const cart = req.user.cart.toString();
 
         const cartID = await CartModel.findById(cart); 
 
-        console.log("carrito!!!", req.user.cart)
+        console.log("carrito!!!", req.user.cart.toString())
 
         let cartCount = 0;
 
