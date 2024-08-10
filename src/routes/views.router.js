@@ -25,6 +25,23 @@ const ticketController = require("../controllers/ticket.controller.js");
 const cData = new cartController();
 const tData= new ticketController();
 
+//Nodemailer: 
+
+const nodemailer = require("nodemailer");
+
+//Transporte de nodemailer: 
+
+const transport = nodemailer.createTransport({
+    service: "gmail",
+    port: 587,
+    auth:{
+        user: "testjolav@gmail.com",
+        pass: "jzxb vjlq qqrs ejuz"
+    }
+})
+
+
+
 viewsRouter.get("/products", passport.authenticate("jwt", {session:false}), AllowedUser('user'), async (req,res)=>{
 
     try{
@@ -223,6 +240,15 @@ viewsRouter.post("/carts/:cid/purchase",passport.authenticate("jwt", { session: 
     console.log("user",user);
 
     console.log("ticket", ticketData)
+
+    await transport.sendMail({
+        from: "Mugcups <testjolav@gmail.com>",
+        to: req.user.email,
+        subject: "Tu compra ha sido procesada con éxito",
+        html:`<h1> Detalle de tu compra </h1> <br> 
+        <p> Código de compra: ${ticketData.code}</p>
+        <p> Cantidad de la compra: $${ticketData.amount} </p>`
+    })
     
     res.render("purchase", { user: user, ticket: ticketData });
 } else {
