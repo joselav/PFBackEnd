@@ -28,13 +28,15 @@ const tData= new ticketController();
 viewsRouter.get("/products", passport.authenticate("jwt", {session:false}), AllowedUser('user'), async (req,res)=>{
 
     try{
-        const products= await pData.getP(req,res);
+        const products= await pData.getPViews(req);
+        console.log('Productos para vista:', products); // Debug
 
-        const cart = req.user.cart.toString();
+
+        const cart = req.user.cart;
 
         const cartID = await CartModel.findById(cart); 
 
-        console.log("carrito!!!", req.user.cart.toString())
+        console.log("carrito!!!", req.user.cart)
 
         let cartCount = 0;
 
@@ -57,10 +59,11 @@ viewsRouter.get("/products", passport.authenticate("jwt", {session:false}), Allo
 
         //enviamos la información a la vista
         res.render("products", 
-        {productos: products.payload, user: user});
+        {productos: products, user: user});
     }catch(error){
         req.logger.error(`Error interno del servidor en ${req.url} - ${new Date().toLocaleTimeString()}`);
         res.status(500).send({error: "Error interno del servidor"});
+        console.log(error)
     }
     
 });

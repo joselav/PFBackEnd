@@ -18,7 +18,9 @@ class ProductController{
 
             //Si funciona, es decir, si sucess== true, se envía la respuesta.
             if(product.success){ 
-            return product.message } else {
+                const pdt = product.message;
+                res.status(200).send(pdt)} 
+                else {
                 throw new Error("Error al cargar datos");}
             }
             catch(error){
@@ -26,6 +28,32 @@ class ProductController{
                 throw error;
             }
     }
+
+    async getPViews(req,res){
+        try{//Definimos el Limit como 10 por defecto, o el que nos pase el usuario.
+          const limit = req.query.limit || 10;
+          //Definimos que nos muestre la página 1 por defecto, o la que nos pase el usuairo.
+          const page = req.query.page || 1;
+          //En el caso que nos pidan la categoría, la que nos pidieron o por defecto nada y nos enseña todos los productos. 
+          const category = req.query.category || "";
+          //Definimos que nos muetre los productos de forma ascendente por defecto, o lo que nos pida el usuario.
+          const sort = req.query.sort || "asc";
+
+          //Esperamos la función de la clase de ProductManager y le pasamos los datos:
+          const product = await productData.getProducts(limit,page,sort, category);
+
+          //Si funciona, es decir, si sucess== true, se envía la respuesta.
+          if(product.success){ 
+            console.log('Productos obtenidos:', product.message);
+              return product.message } 
+              else {
+              throw new Error("Error al cargar datos");}
+          }
+          catch(error){
+              req.logger.error(`Error en ${req.url} - ${new Date().toLocaleTimeString()}`);
+              throw error;
+          }
+  }
 
 
     async getPID(req,res){
