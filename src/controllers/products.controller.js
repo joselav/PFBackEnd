@@ -44,7 +44,7 @@ class ProductController{
 
           //Si funciona, es decir, si sucess== true, se envía la respuesta.
           if(product.success){ 
-            console.log('Productos obtenidos:', product.message);
+            // console.log('Productos obtenidos:', product.message);
               return product.message } 
               else {
               throw new Error("Error al cargar datos");}

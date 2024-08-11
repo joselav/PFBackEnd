@@ -54,8 +54,15 @@ class CartServices{
     //pid ---> id del producto
     async addProductsToCart(cid, pid, quantity) {
         try {
+             //Paso el la cantidad a Número, porque sino, en la vista, no me lo lee correctamente. 
+            const qnty = Number(quantity);
+
             // Buscamos el carrito por su ID
             const cart = await CartModel.findById(cid);
+
+            //paso el pid a un ObjectId
+            const prodId = new mongoose.Types.ObjectId(pid);
+
             
             // Verificamos si el carrito existe
             if (!cart) {
@@ -63,17 +70,18 @@ class CartServices{
             }
             
             // Buscamos el índice del producto en el carrito
-            const prodIndex = cart.products.findIndex(prod => prod.id_prod.equals(pid));
+            const prodIndex = cart.products.findIndex(prod => 
+                prod.id_prod && prod.id_prod._id && prod.id_prod._id.equals(prodId)
+            );
             
             if (prodIndex !== -1) {
                 // Si el producto ya está en el carrito, sumamos la cantidad
-                cart.products[prodIndex].quantity += quantity;
+                cart.products[prodIndex].quantity += qnty;
+
             } else {
                 // Si el producto no está en el carrito, lo añadimos al arreglo de productos
-                cart.products.push({ id_prod: pid, quantity: quantity });
+                cart.products.push({ id_prod: prodId, quantity: qnty });
             }
-    
-            console.log(cart.products);
     
             // Marcamos el carrito como modificado
             cart.markModified("products");

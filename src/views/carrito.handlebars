@@ -23,7 +23,15 @@
             <ul>
             <p>Stock del producto {{this.id_prod.stock}}</p>
             <li>Producto: {{this.id_prod.title}}</li>
-            <li>Cantidad: {{this.quantity}}</li>
+            <li>
+                        Cantidad:
+                        <form action="/carts/{{../_id}}/products/{{this.id_prod._id}}/update" method="POST" style="display:inline;">
+                            <input type="hidden" name="quantity" value="{{this.quantity}}">
+                            <button type="submit" name="action" value="decrement">-</button>
+                            <span>{{this.quantity}}</span>
+                            <button type="submit" name="action" value="increment">+</button>
+                        </form>
+                    </li>
             </ul>
             </div>
             <div class="ppddelete"> 
@@ -40,7 +48,11 @@
         <p>No hay productos en este carrito.</p>
     {{/if}}
 {{/each}}
-
+   <div class="empty-cart">
+    <form action="/carts/{{carrito.carts.[0]._id}}/clear" method="POST">
+        <button type="submit">Vaciar carrito</button>
+    </form>
+</div>
    <div class="cantcart">
     <p>Total de cantidades: <span>{{carrito.totalQuantity}}</span></p>
     <p>Total de precio: <span>€{{carrito.totalPrice}}</span></p><br><br>

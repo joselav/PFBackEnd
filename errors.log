@@ -54,3 +54,28 @@ error: Error interno del servidor en /products - 19:08:25
 error: Error interno del servidor en /products - 19:08:44
 error: Carrito no encontrado. en /carts/6636b1e0b91083e3e2424d38/products/65fe259400433c4481b5ba6d - 19:14:44
 error: Ha ocurrido un error interno del servidor en /carrito - 19:56:11
+error: No se ha podido agregar el producto al carrito. en /carts/66b7a060b839db623a074a0b/products/65fe259400433c4481b5ba5d - 18:25:10
+error: No se ha podido agregar el producto al carrito. en /carts/66b7a060b839db623a074a0b/products/65fe259400433c4481b5ba6d - 18:30:20
+error: No se ha podido agregar el producto al carrito. en /carts/66b7a060b839db623a074a0b/products/65fe259400433c4481b5ba6d - 18:30:45
+error: No se ha podido agregar el producto al carrito. en /carts/66b7a060b839db623a074a0b/products/65fe259400433c4481b5ba6d - 18:31:16
+error: No se ha podido agregar el producto al carrito. en /carts/66b7a060b839db623a074a0b/products/65fe259400433c4481b5ba6d - 18:31:57
+error: No se ha podido agregar el producto al carrito. en /carts/66b7a060b839db623a074a0b/products/65fe259400433c4481b5ba6d - 18:40:01
+error: No se ha podido agregar el producto al carrito. en /carts/66b7a060b839db623a074a0b/products/65fe259400433c4481b5ba6d - 18:43:45
+error: No se ha podido agregar el producto al carrito. en /carts/66b7a060b839db623a074a0b/products/65fe259400433c4481b5ba6d - 19:56:41
+error: Ha ocurrido un error en /carts/66b7a060b839db623a074a0b/products/65fe259400433c4481b5ba6d/update - 21:49:15
+error: Ha ocurrido un error en /carts/66b7a060b839db623a074a0b/products/65fe259400433c4481b5ba6d/update - 21:56:38
+error: Ha ocurrido un error en /carts/66b7a060b839db623a074a0b/products/65fe259400433c4481b5ba6d/update - 21:59:46
+error: Ha ocurrido un error en /carts/66b7a060b839db623a074a0b/products/65fe259400433c4481b5ba6d/update - 22:00:15
+error: Ha ocurrido un error en /carts/66b7a060b839db623a074a0b/products/65fe259400433c4481b5ba6d/update - 22:00:42
+error: Ha ocurrido un error en /carts/66b7a060b839db623a074a0b/products/65fe259400433c4481b5ba6d/update - 22:01:10
+error: Ha ocurrido un error en /carts/66b7a060b839db623a074a0b/products/65fe259400433c4481b5ba6d/update - 22:01:29
+error: Ha ocurrido un error en /carts/66b7a060b839db623a074a0b/products/65fe259400433c4481b5ba6d/update - 22:02:07
+error: Ha ocurrido un error en /carts/66b7a060b839db623a074a0b/products/65fe259400433c4481b5ba6d/update - 22:02:53
+error: Ha ocurrido un error en /carts/66b90a64456df719ca59188b/products/65fe259400433c4481b5ba6d/update - 22:03:54
+error: Ha ocurrido un error en /carts/66b7a060b839db623a074a0b/products/65fe259400433c4481b5ba6d/update - 22:05:54
+error: Ha ocurrido un error en /carts/66b7a060b839db623a074a0b/products/65fe259400433c4481b5ba6d/update - 22:08:50
+error: Ha ocurrido un error en /carts/66b7a060b839db623a074a0b/products/65fe259400433c4481b5ba6d/update - 22:10:20
+error: Ha ocurrido un error en /carts/66b7a060b839db623a074a0b/products/65fe259400433c4481b5ba6d/update - 22:12:33
+error: Ha ocurrido un error en /carts/66b7a060b839db623a074a0b/products/65fe259400433c4481b5ba6d/update - 22:14:26
+error: Ha ocurrido un error en /carts/66b7a060b839db623a074a0b/products/65fe259400433c4481b5ba6d/update - 22:14:43
+error: Ha ocurrido un error en /carts/66b7a060b839db623a074a0b/products/65fe259400433c4481b5ba6d/update - 22:16:30

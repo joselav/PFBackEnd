@@ -89,6 +89,8 @@ class CartController{
         try {
             const { cid, pid } = req.params;
             const { quantity } = req.body;
+
+            console.log(`Agregar producto ${pid} con cantidad ${quantity} al carrito ${cid}`);
     
             // Llama a la función para agregar productos al carrito y espera su respuesta
             const prodAdd = await cartData.addProductsToCart(cid, pid, quantity);
@@ -108,7 +110,37 @@ class CartController{
             return res.status(500).send({ error: "Error interno del servidor" });
         }
     }
+
+    async updateCPIDView(req,res){
+        try {
+            const { cid, pid } = req.params;
+            let quantity = Number(req.body.quantity); // Convertir a número
+            const action = req.body.action;
     
+            // Ajustar la cantidad según la acción
+            if (action === 'increment') {
+                quantity += 1;
+            } else if (action === 'decrement') {
+                quantity = Math.max(quantity - 1, 1); // Evitar cantidades menores a 1
+            }
+    
+            // Llamar al repositorio para actualizar la cantidad
+            const result = await cartData.updateProdInCart(cid, pid, quantity);
+
+            if (result.success){
+             return  res.redirect("/carrito")
+            }else{
+                req.logger.error(`${result.message} en ${req.url} - ${new Date().toLocaleTimeString()}`);
+                // Si no fue exitosa, envía una respuesta 400 Bad Request
+                res.status(400).send(result.message); // Solo una respuesta enviada
+            }
+           
+    s
+        } catch (error) {
+            req.logger.error(`Ha ocurrido un error en ${req.url} - ${new Date().toLocaleTimeString()}`);
+            res.status(500).send({ error: "Error interno del servidor" });
+        }
+    }
 
     async updateC(req,res){
          //Pedimos el cid como parámetro
@@ -139,8 +171,6 @@ class CartController{
 
         //Mostramos los mensajes
         if(prodUpdate.success){
-            res.status(200).send(prodUpdate.message)
-        }else{
             req.logger.error(`${prodUpdate.message} en ${req.url} - ${new Date().toLocaleTimeString()}`);
 
             res.status(400).send(prodUpdate.message)

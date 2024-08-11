@@ -25,6 +25,9 @@ const ticketController = require("../controllers/ticket.controller.js");
 const cData = new cartController();
 const tData= new ticketController();
 
+const cartServices = require("../repository/cart.repository.js");
+const CartD = new cartServices();
+
 //Nodemailer: 
 
 const nodemailer = require("nodemailer");
@@ -46,18 +49,18 @@ viewsRouter.get("/products", passport.authenticate("jwt", {session:false}), Allo
 
     try{
         const products= await pData.getPViews(req);
-        console.log('Productos para vista:', products); // Debug
+        // console.log('Productos para vista:', products); // Debug
 
 
         const cart = req.user.cart.toString();
 
-        console.log("req.user=", req.user);
+        // console.log("req.user=", req.user);
 
-        console.log("req.user.cart=",req.user.cart)
+        // console.log("req.user.cart=",req.user.cart)
 
         const cartID = await CartModel.findById(cart); 
 
-        console.log("carrito!!!", req.user.cart.toString())
+        // console.log("carrito!!!", req.user.cart.toString())
 
         let cartCount = 0;
 
@@ -76,7 +79,7 @@ viewsRouter.get("/products", passport.authenticate("jwt", {session:false}), Allo
             email: req.user.email,
             rol: req.user.rol
         };
-        console.log(user)
+        // console.log(user)
 
         //enviamos la información a la vista
         res.render("products", 
@@ -187,9 +190,36 @@ viewsRouter.get("/current",passport.authenticate("jwt", {session:false}), async 
     
 })
 
+viewsRouter.post("/carts/:cid/products/:pid/update", passport.authenticate("jwt", { session: false}), AllowedUser('user'), async(req,res)=>{
+    try {
+        // Llamamos a la función del controlador para manejar la actualización
+      await cData.updateCPIDView(req, res);
+
+    } catch (error) {
+        req.logger.error(`Error interno del servidor en ${req.url} - ${new Date().toLocaleTimeString()}`);
+        res.status(500).send({ error: "Error interno del servidor" });
+    }
+})
+
+viewsRouter.post("/carts/:cid/clear", passport.authenticate("jwt", {session: false}), AllowedUser('user'), async (req, res)=> {
+        try {
+            const { cid } = req.params; 
+
+            const cartId = cid; 
+
+            await CartD.clearCart(cartId); 
+
+            res.redirect("/carrito")
+
+        } catch (error) {
+            req.logger.error(`Error interno del servidor en ${req.url} - ${new Date().toLocaleTimeString()}`);
+            res.status(500).send({ error: "Error interno del servidor" });
+        }
+})
 
 viewsRouter.post("/carts/:cid/products/:pid", passport.authenticate("jwt", { session: false }),AllowedUser('user'), async (req, res) => {
     try {  
+
        await cData.addCPID(req,res);
        res.redirect("/products"); // Redirige a la página de productos después de agregar al carrito
     } catch (error) {
@@ -205,7 +235,7 @@ viewsRouter.post("/carrito/:cid", async (req, res) => {
         const { cid } = req.body;
 
         // Llama al controlador deleteC para eliminar el carrito
-        const deleteCartResponse = await cData.deleteC(req, res, cid);
+        await cData.deleteC(req, res, cid);
 
         res.redirect("/carrito")
     } catch (error) {
