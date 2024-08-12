@@ -30,7 +30,11 @@ const userSchema = new mongoose.Schema({
     cart:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'carts'
-    } 
+    },
+    last_activity: {
+        type: Date, 
+        default: Date.now
+    }
 }, {versionKey: false});
 
 userSchema.pre('save', async function(next){

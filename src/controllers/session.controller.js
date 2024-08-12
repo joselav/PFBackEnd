@@ -57,8 +57,12 @@ class SessionController{
                 if(!validatePassword(password, user)){
                 console.log("Contraseña incorrecta");
                 return res.status(401).send("Contraseña incorrecta")
-            }
+                }
 
+                ///Modificamos última actividad del usuario.
+                user.last_activity= Date.now();
+                await user.save()
+            
                 const token = jwt.sign({email}, process.env.JWTSecret , {expiresIn:"1h"});
 
                 //Mandamos cookie como Token:

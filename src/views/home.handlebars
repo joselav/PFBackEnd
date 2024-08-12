@@ -7,6 +7,21 @@
 
 {{#if (eq user.rol 'admin')}}
        <a href="/realtimeproducts"><button>Modificar Productos</button></a>
+
+       <div class="inactiveUser">
+        <h2>Usuarios Inactivos</h2>
+        <ul>
+            {{#each activity}}
+                <li>
+                    ({{this.rol}}) {{this.first_name}} {{this.last_name}} ({{this.email}})
+                    <form action="/admin/deleteUser/{{this._id}}" method="POST" style="display:inline;">
+                        <button type="submit" class="m-btn">Eliminar</button>
+                    </form>
+                </li>
+            {{/each}}
+        </ul>
+       </div>
+        
    {{else if (eq user.rol 'user')}}
        <a href="/products"><button>Ver Productos</button></a>
        <a href="/chat"><button>Ingresar al Chat</button></a>

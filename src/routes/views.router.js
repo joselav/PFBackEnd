@@ -1,8 +1,10 @@
 const express =require ("express"); 
-const ProductManager= require("../controllers/ProductManager.js");
 const CartModel = require("../models/carts.model.js");
 const messageModel = require("../models/messages.model.js");
-const CartManager = require("../controllers/CartManager.js");
+
+const lastActivityController = require("../controllers/lastactivity.controller.js");
+
+const LAController = new lastActivityController();
 
 //FAKER:
 const generateProducts = require("../utils/faker.js");
@@ -17,8 +19,6 @@ const userDTO = require("../dto/userDTO.js")
 
 const passport = require("passport")
 const viewsRouter = express.Router();
-const productData = new ProductManager();
-const cartData = new CartManager();
 
 const cartController = require("../controllers/cart.controller.js");
 const ticketController = require("../controllers/ticket.controller.js");
@@ -98,9 +98,30 @@ viewsRouter.get("/home", passport.authenticate("jwt", {session:false}), async(re
         last_name: req.user.last_name,
         rol: req.user.rol
     };
+    
+    const users = await LAController.getActivity(req, res);
 
-    res.render("home", {user: user});
+
+    // console.log("users aka Activity: ", users)
+
+
+    res.render("home", {user: user, activity: users});
 })
+
+viewsRouter.post("/admin/deleteUser/:uid", passport.authenticate("jwt", {session: false}), AllowedUser('admin'), async (req,res)=>{
+    try {
+        const {uid} = req.params;
+
+        console.log("UID recibido:", uid);
+
+        await LAController.deleteUID(uid);
+
+        res.redirect("/home");
+    } catch (error) {
+        req.logger.error(`Error interno del servidor en ${req.url} - ${new Date().toLocaleTimeString()}`);
+        res.status(500).send({ error: "Error interno del servidor" });
+    }
+} )
 
 viewsRouter.get("/carrito", async (req, res) => {
     try {
@@ -272,9 +293,9 @@ viewsRouter.post("/carts/:cid/purchase",passport.authenticate("jwt", { session: 
     console.log("ticket", ticketData)
 
     await transport.sendMail({
-        from: "Mugcups <testjolav@gmail.com>",
+        from: "Almacen Coder <testjolav@gmail.com>",
         to: req.user.email,
-        subject: "Tu compra ha sido procesada con éxito",
+        subject: `Tu compra ha sido procesada con éxito, ${user} `,
         html:`<h1> Detalle de tu compra </h1> <br> 
         <p> Código de compra: ${ticketData.code}</p>
         <p> Cantidad de la compra: $${ticketData.amount} </p>`

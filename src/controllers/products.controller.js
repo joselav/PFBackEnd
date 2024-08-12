@@ -19,7 +19,7 @@ class ProductController{
             //Si funciona, es decir, si sucess== true, se envía la respuesta.
             if(product.success){ 
                 const pdt = product.message;
-                res.status(200).send(pdt)} 
+                return pdt } 
                 else {
                 throw new Error("Error al cargar datos");}
             }
