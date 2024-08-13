@@ -1,5 +1,6 @@
 const userModel = require("../models/users.models.js");
 const path = require("path");
+const mongoose = require("mongoose")
 
 class PremiumController{
 
@@ -47,7 +48,9 @@ class PremiumController{
         try {
             const { uid } = req.params;
             const user = await userModel.findById(uid);
-            
+            if (!mongoose.Types.ObjectId.isValid(uid)) {
+                return res.status(400).send("ID de usuario inválido.");
+            }
     
             if (!user) {
                 return res.status(404).send("Usuario no encontrado.");
