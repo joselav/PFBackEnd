@@ -7,7 +7,7 @@ class ActivityController {
     async getActivity(req, res){
        try {
          ///Límite de dos días;
-         const limitDate = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000);
+         const limitDate = new Date(Date.now() - 1 * 24 * 60 * 60 * 1000);
 
          //límite de 30 mínutos: 
          //const limitDate = new Date(Date.now() - 10 * 60 * 1000);
