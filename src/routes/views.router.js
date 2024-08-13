@@ -2,6 +2,8 @@ const express =require ("express");
 const CartModel = require("../models/carts.model.js");
 const messageModel = require("../models/messages.model.js");
 
+const userModel = require("../models/users.models.js")
+
 const lastActivityController = require("../controllers/lastactivity.controller.js");
 
 const LAController = new lastActivityController();
@@ -12,7 +14,7 @@ const generateProducts = require("../utils/faker.js");
 const productController= require("../controllers/products.controller.js");
 const pData= new productController();
 //middleware Users: 
-const AllowedUser = require("../controllers/checkRoles.js");
+const AllowedUser = require("../middlewares/checkRoles.js");
 
 //DTO: 
 const userDTO = require("../dto/userDTO.js")
@@ -30,22 +32,15 @@ const CartD = new cartServices();
 
 //Nodemailer: 
 
-const nodemailer = require("nodemailer");
+const transport = require("../middlewares/nodemailer.js");
+const premiumController = require("../controllers/premium.controller.js");
 
-//Transporte de nodemailer: 
+const PremiumController = new premiumController;
 
-const transport = nodemailer.createTransport({
-    service: "gmail",
-    port: 587,
-    auth:{
-        user: "testjolav@gmail.com",
-        pass: "jzxb vjlq qqrs ejuz"
-    }
-})
+const updateDocs = require("../middlewares/multer.js")
 
 
-
-viewsRouter.get("/products", passport.authenticate("jwt", {session:false}), AllowedUser('user'), async (req,res)=>{
+viewsRouter.get("/products", passport.authenticate("jwt", {session:false}), AllowedUser(['user', 'premium']), async (req,res)=>{
 
     try{
         const products= await pData.getPViews(req);
@@ -94,10 +89,14 @@ viewsRouter.get("/products", passport.authenticate("jwt", {session:false}), Allo
 
 viewsRouter.get("/home", passport.authenticate("jwt", {session:false}), async(req,res)=>{
     const user= {
+        id: req.user._id.toString(),
         first_name: req.user.first_name,
         last_name: req.user.last_name,
-        rol: req.user.rol
+        rol: req.user.rol,
+        documents: req.user.documents
     };
+
+    console.log("mostrar info usuario:", user)
     
     const users = await LAController.getActivity(req, res);
 
@@ -123,7 +122,7 @@ viewsRouter.post("/admin/deleteUser/:uid", passport.authenticate("jwt", {session
     }
 } )
 
-viewsRouter.get("/carrito", async (req, res) => {
+viewsRouter.get("/carrito", passport.authenticate("jwt", {session: false}), AllowedUser(['user', 'premium']), async (req, res) => {
     try {
         // Llamamos la información del carrito desde el controlador
        const cart = await cData.getCartsViews(req, res);
@@ -152,7 +151,7 @@ viewsRouter.get("/realtimeproducts",passport.authenticate("jwt", {session:false}
     
 })
 
-viewsRouter.get("/chat",passport.authenticate("jwt", {session:false}), AllowedUser('user'), async (req,res)=>{
+viewsRouter.get("/chat",passport.authenticate("jwt", {session:false}), AllowedUser(['user', 'premium']), async (req,res)=>{
     try{
         //Mostramos los mensajes
         const messages = await messageModel.find();
@@ -164,7 +163,7 @@ viewsRouter.get("/chat",passport.authenticate("jwt", {session:false}), AllowedUs
 }
 )
 
-viewsRouter.post("/chat", async (req,res)=>{
+viewsRouter.post("/chat", passport.authenticate("jwt", {session: false}), AllowedUser(['user', 'premium']), async (req,res)=>{
     const {user, message} = req.body;
 
     try{
@@ -186,7 +185,6 @@ viewsRouter.post("/chat", async (req,res)=>{
         req.logger.error(`error en ${req.url} - ${new Date().toLocaleTimeString()}`)
         res.status(400).send({respuesta:"No se ha logrado guardar los datos", mensaje: error})}
 })
-
 
 viewsRouter.get("/register", async (req,res)=>{
         res.render("register")
@@ -211,7 +209,7 @@ viewsRouter.get("/current",passport.authenticate("jwt", {session:false}), async 
     
 })
 
-viewsRouter.post("/carts/:cid/products/:pid/update", passport.authenticate("jwt", { session: false}), AllowedUser('user'), async(req,res)=>{
+viewsRouter.post("/carts/:cid/products/:pid/update", passport.authenticate("jwt", { session: false}), AllowedUser(['user', 'premium']), async(req,res)=>{
     try {
         // Llamamos a la función del controlador para manejar la actualización
       await cData.updateCPIDView(req, res);
@@ -222,7 +220,7 @@ viewsRouter.post("/carts/:cid/products/:pid/update", passport.authenticate("jwt"
     }
 })
 
-viewsRouter.post("/carts/:cid/clear", passport.authenticate("jwt", {session: false}), AllowedUser('user'), async (req, res)=> {
+viewsRouter.post("/carts/:cid/clear", passport.authenticate("jwt", {session: false}), AllowedUser(['user', 'premium']), async (req, res)=> {
         try {
             const { cid } = req.params; 
 
@@ -238,7 +236,7 @@ viewsRouter.post("/carts/:cid/clear", passport.authenticate("jwt", {session: fal
         }
 })
 
-viewsRouter.post("/carts/:cid/products/:pid", passport.authenticate("jwt", { session: false }),AllowedUser('user'), async (req, res) => {
+viewsRouter.post("/carts/:cid/products/:pid", passport.authenticate("jwt", { session: false }), AllowedUser(['user', 'premium']), async (req, res) => {
     try {  
 
        await cData.addCPID(req,res);
@@ -278,7 +276,7 @@ viewsRouter.post("/carts/:cid/products/:pid/delete", async(req, res)=>{
     }
 })
 
-viewsRouter.post("/carts/:cid/purchase",passport.authenticate("jwt", { session: false }),AllowedUser('user'), async(req,res)=>{
+viewsRouter.post("/carts/:cid/purchase",passport.authenticate("jwt", { session: false }),AllowedUser(['user', 'premium']), async(req,res)=>{
     const {cid} = req.params;
     console.log(cid)
    const purchase= await tData.purchasedTicket(req,res,cid);
@@ -293,7 +291,7 @@ viewsRouter.post("/carts/:cid/purchase",passport.authenticate("jwt", { session: 
     console.log("ticket", ticketData)
 
     await transport.sendMail({
-        from: "Almacen Coder <testjolav@gmail.com>",
+        from: "PF Almacen <testjolav@gmail.com>",
         to: req.user.email,
         subject: `Tu compra ha sido procesada con éxito, ${user} `,
         html:`<h1> Detalle de tu compra </h1> <br> 
@@ -307,6 +305,61 @@ viewsRouter.post("/carts/:cid/purchase",passport.authenticate("jwt", { session: 
     res.status(500).send({ error: "Error interno del servidor" });
 }
 
+})
+
+viewsRouter.get("/users", passport.authenticate("jwt", { session: false}), AllowedUser('admin'), async(req,res)=>{
+    try {
+        const users = await userModel.find().exec();
+
+        console.log("usuarios encontrados", users)
+
+        res.render("users", {users})
+
+    } catch (error) {
+        req.logger.error(`Error interno del servidor en ${req.url} - ${new Date().toLocaleTimeString()}`);
+        res.status(500).send({ error: "Error interno del servidor" });
+    }
+})
+
+viewsRouter.get("/:uid/documents", passport.authenticate("jwt", {session:false}), AllowedUser(['user', 'premium']), async(req, res)=>{
+   try {
+    const {uid} = req.params
+
+    const user = await userModel.findById(uid);
+
+    const id = user._id.toString();
+
+    console.log( "usuario info:", user)
+
+    console.log( "usuario id: ", id)
+
+    res.render("becomepremium", {id,  documents: user.documents || []})
+   } catch (error) {
+    req.logger.error(`Error interno del servidor en ${req.url} - ${new Date().toLocaleTimeString()}`);
+    res.status(500).send({ error: "Error interno del servidor" });
+   }
+})
+
+viewsRouter.post("/:uid/documents", passport.authenticate("jwt", {session: false}), AllowedUser(['user', 'premium']), updateDocs.fields([ { name: 'pfp', maxCount: 1 },
+{ name: 'pdf', maxCount: 3 }]), async(req, res)=>{
+    try {
+       await PremiumController.UpdateDocs(req, res);
+
+    } catch (error) {
+        req.logger.error(`Error interno del servidor en ${req.url} - ${new Date().toLocaleTimeString()}`);
+        res.status(500).send("Error del servidor al verificar los documentos.");
+    }
+})
+
+viewsRouter.get("/premium/:uid", passport.authenticate("jwt", {session: false}), AllowedUser(['user', 'premium']), async(req, res)=>{
+ try {
+    await PremiumController.UpdateUser(req,res);
+
+    res.redirect("/home");
+ } catch (error) {
+        req.logger.error(`Error interno del servidor en ${req.url} - ${new Date().toLocaleTimeString()}`);
+        res.status(500).send("Error del servidor");
+ }
 })
 
 viewsRouter.get("/mockingproducts", async(req,res)=>{

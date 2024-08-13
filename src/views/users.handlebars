@@ -1,0 +1,16 @@
+ <br>
+<div class="welcome">
+<a href="/home">Ir a Home</a>
+<a href="/api/sessions/logout">Cerrar Sesión</a>
+</div>
+<br><br>
+
+<h1 class="add">Lista de Usuarios Registrados</h1>
+ 
+ {{#each users}}
+  <div class="userlists">
+    <p><strong>({{this.rol}})</strong> {{this.first_name}} {{this.last_name}} - {{this.email}}</p>
+  </div>
+ 
+
+ {{/each}}

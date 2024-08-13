@@ -35,6 +35,11 @@ const hbs = handlebars.create({
         eq: function (a, b) {
             return a === b;
         }
+    },
+    runtimeOptions: {
+        // Permite acceso a propiedades del prototipo
+        allowProtoPropertiesByDefault: true,
+        allowProtoMethodsByDefault: true
     }
 });
 

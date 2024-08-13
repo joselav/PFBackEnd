@@ -1,5 +1,7 @@
 const userModel = require("../models/users.models.js");
 
+const transport = require("../middlewares/nodemailer.js");
+
 class ActivityController {
     
     async getActivity(req, res){
@@ -26,7 +28,14 @@ class ActivityController {
 
             if(!result){
                 return res.status(404).send("Usuario no encontrado");
-            }
+            };
+
+            await transport.sendMail({
+                from: "PF Almacen <testjolav@gmail.com>",
+                to: result.email,
+                subject: `Tu cuenta ha sido eliminiada, ${result.first_name} `,
+                html:`<h1> Tu cuenta ha sido eliminada por inactividad<br>`
+            });
 
             console.log(`Usuario inactivo ${result.first_name} ${result.last_name} con ID:${result._id} ha sido eliminado con éxito`);
             return result;

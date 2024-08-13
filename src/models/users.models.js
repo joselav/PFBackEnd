@@ -27,6 +27,16 @@ const userSchema = new mongoose.Schema({
         type: String, 
         default: 'user'
     },
+    documents: [{
+        name: {
+            type: String,
+            default: ''
+        },
+        reference: {
+            type: String,
+            default: ''
+        }
+    }],
     cart:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'carts'

@@ -29,6 +29,10 @@ const productSchema = new mongoose.Schema({
             required: true
         },
         status:{type: Boolean, default: true},
+        owner: {
+            type: String, 
+            default: ''
+        }
         
     }, {versionKey: false});
 

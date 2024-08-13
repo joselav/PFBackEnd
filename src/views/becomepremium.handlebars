@@ -1,0 +1,16 @@
+  <br>
+  <h1>¡Mejora tu plan!</h1><br>
+  <p>Para ser usuario Premium debes presentar los siguientes archivos:</p>
+    <form action="/{{id}}/documents" method="post" enctype="multipart/form-data">
+        <label for="pfp">Fotografía de Perfil:</label>
+        <input type="file" name="pfp" accept="image/*" required><br><br>
+        
+        <label for="pdf">Fotocopia de Documento:</label>
+        <input type="file" name="pdf" accept=".pdf" multiple required><br><br>
+        
+        <button type="submit">Enviar</button>
+    </form>
+<br><br><br>
+{{#if documents.length}}
+    <a href="/premium/{{id}}"><button>Actualizar Suscripción</button></a>
+{{/if}}
