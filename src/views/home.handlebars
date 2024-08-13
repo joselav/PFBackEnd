@@ -30,8 +30,8 @@
        <a href="/{{user.id}}/documents"><button>Suscribirse a Usuario Premium</button></a>
 
        {{else if (eq user.rol 'premium')}}
-       <a href="/premium/products"><button>Agregar Productos</button></a>
        <a href="/products"><button>Ver Productos</button></a>
+       <a href="/premium-products"><button>Agregar y Eliminar Productos Propios</button></a>
        <a href="/chat"><button>Ingresar al Chat</button></a>
        <a href="/carrito"><button>Ver Productos en Carrito</button></a><br><br>
        <a href="/premium/{{user.id}}"><button>Revertir a User</button></a>

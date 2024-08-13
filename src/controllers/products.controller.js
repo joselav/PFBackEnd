@@ -1,6 +1,8 @@
 const ProductServices = require("../repository/products.repository.js");
 const productData = new ProductServices();
 
+const transport = require("../middlewares/nodemailer.js");
+
 class ProductController{
 
     async getP(req,res){
@@ -55,6 +57,38 @@ class ProductController{
           }
   }
 
+  async getProductsPremium(req,res){
+    try {
+        // Definir los parámetros de paginación y filtros
+        const limit = parseInt(req.query.limit, 10) || 10;
+        const page = parseInt(req.query.page, 10) || 1;
+        const category = req.query.category || "";
+        const sort = req.query.sort || "asc";
+
+        // Obtener el email del usuario autenticado
+        const email = req.user.email;
+
+        // Llamar al repositorio con el filtro de email
+        const products = await productData.getPPremium({
+            limit,
+            page,
+            sort,
+            category,
+            owner: email // Añadir el filtro por email
+        });
+
+        // Si la operación fue exitosa, enviar los productos
+        if (products.success) {
+            return products.message;
+        } else {
+            throw new Error("Error al cargar datos");
+        }
+    } catch (error) {
+        req.logger.error(`Error en ${req.url} - ${new Date().toLocaleTimeString()}`);
+        return res.status(500).send("Error interno del servidor.");
+    }
+}
+
 
     async getPID(req,res){
          //Pedimos el parametro del id, en este caso como se pide en la ruta: 'pid'.
@@ -71,17 +105,23 @@ class ProductController{
     }
 
     async addPID(req,res){
-          //Primero, pedimos todos los campos desde el req.body:
-        const data = req.body; 
-        //Ahora definimos la constante para que se guarden con las características especificadas en el ProductManager:
-        const product = await productData.addProduct(data);
 
-        if(product.success){
-            res.status(200).send(product.message);
-        }else{
+        try {
+               //Primero, pedimos todos los campos desde el req.body:
+        const data = req.body; 
+        const email= req.user.email;
+        console.log("email", email);
+
+        const Edata= { ...data, owner: email };
+        //Ahora definimos la constante para que se guarden con las características especificadas en el ProductManager:
+        await productData.addProduct(Edata);
+
+        } catch (error) {
             req.logger.error(`Error en ${req.url} - ${new Date().toLocaleTimeString()}`);
             res.status(400).send(product.message );
         }
+       
+
     }
 
     async updatePID(req,res){
@@ -108,12 +148,39 @@ class ProductController{
         const productDelete = await productData.deleteProduct(pid);
         
         if(productDelete.success){
-            res.status(200).send(productDelete.message);
+
+            if(productDelete.deletedProduct.owner != "adminCoder@coder.com"){
+
+                const email = productDelete.deletedProduct.owner;
+                await transport.sendMail({
+                    from: "PF Almacen <testjolav@gmail.com>",
+                    to: `${email}`,
+                    subject: `Tu producto, ${productDelete.deletedProduct.title} ha sido eliminado`,
+                    html:`<h1> El administrador ha eliminado tu producto<br>`
+                });
+            }
+
+            return productDelete.deletedProduct;
+           console.log("DATOOOOOOOOOOOOOOOOS", productDelete.deletedProduct);
         }else{
             req.logger.error(`Error en ${req.url} - ${new Date().toLocaleTimeString()}`);
             res.status(400).send(productDelete.message);
         }
     }
+
+    async deletePIDPremium(req,res){
+        //Pedimos el Id como parámetro: 
+       const {pid} = req.params;
+       //Enviamos la información al ProductManager para que controle las especifícaciones definidas ahí.
+       const productDelete = await productData.deleteProduct(pid);
+       
+       if(productDelete.success){
+           return productDelete.deletedProduct;
+       }else{
+           req.logger.error(`Error en ${req.url} - ${new Date().toLocaleTimeString()}`);
+           res.status(400).send(productDelete.message);
+       }
+   }
 
 }
 

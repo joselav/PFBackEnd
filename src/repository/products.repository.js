@@ -77,11 +77,38 @@ class ProductServices{
         return {success:true, message: productID};
     }
 
-    async addProduct({title, description, price, thumbnail, code, category, stock}){
+    async getPPremium({ limit, page, sort, category, owner }){
+        try {
+            const query = {};
+    
+            if (category) {
+                query.category = category;
+            }
+    
+            if (owner) {
+                query.owner = owner; // Filtrar por el email del propietario
+            }
+    
+            const options = {
+                page,
+                limit,
+                sort: { price: sort === "asc" ? 1 : -1 } // Ordenar por precio
+            };
+    
+            const result = await ProductModel.paginate(query, options);
+    
+            return { success: true, message: result };
+        } catch (error) {
+            console.error("Error al obtener productos:", error);
+            return { success: false, message: "Error al obtener productos." };
+        }
+    }
+
+    async addProduct({title, description, price, thumbnail, code, category, stock, owner}){
 
         try{
     
-            const validate = title && description && price && code && category && stock;
+            const validate = title && description && price && code && category && stock && owner;
             //Verificación que expresa que si no existe alguno de los campos, no se agregue el producto hasta que no se complete. 
          if(!validate){
             console.error("no ha sido posible subir producto, controla". error)
@@ -102,7 +129,7 @@ class ProductServices{
              
             //Recibo los datos y los ordeno dentro de un nuevo objeto de productos. 
             const newProduct = await ProductModel.create({
-                title, description, price, thumbnail, code, stock,category, status:true //Valor predeterminado, booleano. 
+                title, description, price, thumbnail, code, stock,category, status:true, owner
             }); 
     
             return {success: true, message: `El producto se ha creado exitosamente ${newProduct}`}}

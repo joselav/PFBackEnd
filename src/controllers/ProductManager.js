@@ -78,6 +78,8 @@ class ProductManager {
    async addProduct({title, description, price, thumbnail, code, category, stock}){
 
     try{
+        const productData = req.body;
+        console.log('Datos del producto:', productData);  
 
         const validate = title && description && price && code && category && stock;
         //Verificación que expresa que si no existe alguno de los campos, no se agregue el producto hasta que no se complete. 
@@ -100,7 +102,7 @@ class ProductManager {
          
         //Recibo los datos y los ordeno dentro de un nuevo objeto de productos. 
         const newProduct = await ProductModel.create({
-            title, description, price, thumbnail, code, stock,category, status:true //Valor predeterminado, booleano. 
+            title, description, price, thumbnail, code, stock, category, status:true //Valor predeterminado, booleano. 
         }); 
 
         return {success: true, message: `El producto se ha creado exitosamente ${newProduct}`}}

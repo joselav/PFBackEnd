@@ -44,7 +44,11 @@ viewsRouter.get("/products", passport.authenticate("jwt", {session:false}), Allo
 
     try{
         const products= await pData.getPViews(req);
-        // console.log('Productos para vista:', products); // Debug
+        console.log('Productos para vista:', products); // Debug
+
+        const string = products.payload;
+
+        console.log("string", string)
 
 
         const cart = req.user.cart.toString();
@@ -82,10 +86,33 @@ viewsRouter.get("/products", passport.authenticate("jwt", {session:false}), Allo
     }catch(error){
         req.logger.error(`Error interno del servidor en ${req.url} - ${new Date().toLocaleTimeString()}`);
         res.status(500).send({error: "Error interno del servidor"});
-        console.log(error)
     }
     
 });
+
+viewsRouter.post("/products/add", passport.authenticate("jwt", {session:false}), AllowedUser('admin'), async(req, res)=>{
+try {
+    await pData.addPID(req,res)
+
+    res.redirect("/realtimeproducts")
+    
+} catch (error) {
+    req.logger.error(`Error interno del servidor en ${req.url} - ${new Date().toLocaleTimeString()}`);
+    res.status(500).send({error: "Error interno del servidor"});
+}
+})
+
+viewsRouter.post("/products/delete/:pid", passport.authenticate("jwt", {session:false}), AllowedUser('admin'),async(req, res)=>{
+    try {
+        await pData.deletePID(req,res)
+
+        res.redirect("/realtimeproducts")
+        
+    } catch (error) {
+        req.logger.error(`Error interno del servidor en ${req.url} - ${new Date().toLocaleTimeString()}`);
+        res.status(500).send("Error del servidor");
+    }
+})
 
 viewsRouter.get("/home", passport.authenticate("jwt", {session:false}), async(req,res)=>{
     const user= {
@@ -360,6 +387,40 @@ viewsRouter.get("/premium/:uid", passport.authenticate("jwt", {session: false}),
         req.logger.error(`Error interno del servidor en ${req.url} - ${new Date().toLocaleTimeString()}`);
         res.status(500).send("Error del servidor");
  }
+})
+
+viewsRouter.get("/premium-products", passport.authenticate("jwt", {session:false}), AllowedUser('premium'), async(req,res)=>{
+    try {
+        const prodPremium = await pData.getProductsPremium(req,res);
+
+        res.render("premiumproducts", {productos: prodPremium.docs})
+    } catch (error) {
+        req.logger.error(`Error interno del servidor en ${req.url} - ${new Date().toLocaleTimeString()}`);
+        res.status(500).send("Error del servidor");
+    }
+})
+
+viewsRouter.post("/premium/add", passport.authenticate("jwt", {session: false}), AllowedUser('premium'), async(req, res)=>{
+    try {
+        await pData.addPID(req,res)
+ 
+        res.redirect("/products")
+         
+     } catch (error) {
+         req.logger.error(`Error interno del servidor en ${req.url} - ${new Date().toLocaleTimeString()}`);
+         res.status(500).send("Error del servidor");
+     }
+})
+
+viewsRouter.post("/premium/delete/:pid", passport.authenticate("jwt", {session:false}), AllowedUser('admin'),async(req, res)=>{
+    try {
+        await pData.deletePIDPremium(req,res)
+
+        res.redirect("/premium-products") 
+    } catch (error) {
+        req.logger.error(`Error interno del servidor en ${req.url} - ${new Date().toLocaleTimeString()}`);
+        res.status(500).send("Error del servidor");
+    }
 })
 
 viewsRouter.get("/mockingproducts", async(req,res)=>{

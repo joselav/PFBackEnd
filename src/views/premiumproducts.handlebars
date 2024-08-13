@@ -1,12 +1,7 @@
-<br>
-<div class="welcome">
-<a href="/home">Ir a Home</a>
-<a href="/api/sessions/logout">Cerrar Sesión</a>
-</div>
-<br><br>
-
+<br><br><br>
+<div class="addp-prem">
 <h1 class="add">Agregar producto</h1>
-<form action="/products/add" method="post">
+  <form action="/premium/add" method="post">
     <label for="title"><p>Título</p></label>
     <input type="text" required id="title" name="title">
 
@@ -30,24 +25,20 @@
 
     <button type="submit">Enviar producto</button>
 </form>
+</div>
 
 
 <p class="listd">Listado de Productos</h2>
 <div id="listProd">
-    {{#each productos.payload}}
+    {{#each productos}}
     <div class="prods">
         <h2>{{this.title}}</h2>
         <p>REF: {{this.code}} </p>
         <h4>{{this.description}}</h4>
         <p>Stock: {{this.stock}}</p>
-        <form action="/products/delete/{{this.id}}" method="post">
+        <form action="/premium/delete/{{this.id}}" method="post">
             <button type="submit">Eliminar</button>
         </form>
     </div>
     {{/each}}
 </div>
-
-<br><br><br>
-
-<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
-<script src="./js/main.js"></script>

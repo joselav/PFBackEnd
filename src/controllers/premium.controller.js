@@ -1,6 +1,5 @@
 const userModel = require("../models/users.models.js");
 const path = require("path");
-const ProductModel = require("../models/products.model.js")
 
 class PremiumController{
 
@@ -80,6 +79,8 @@ class PremiumController{
 
 }
 
+
 module.exports= PremiumController;
+
 
 //Modificar el endpoint /api/users/premium/:uid   para que sólo actualice al usuario a premium si ya ha cargado los siguientes documentos

@@ -29,13 +29,14 @@ const productSchema = new mongoose.Schema({
             required: true
         },
         status:{type: Boolean, default: true},
+        
         owner: {
             type: String, 
-            default: ''
+            required: true
         }
-        
     }, {versionKey: false});
 
+    
     
     productSchema.plugin(mongoosePaginate);
     const ProductModel = mongoose.model('products', productSchema);

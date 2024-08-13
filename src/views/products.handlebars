@@ -1,5 +1,5 @@
 <div class="welcome">
-   <p>¡Bienvenido {{user.first_name}}, {{user.last_name}}! Tu rol es: {{user.rol}}</p>
+   <a href="/home">Ir a Home</a>
    <button><a href="/api/sessions/logout">Cerrar sesión</a></button> 
    <a href="/carrito"><div class="cart">
     <p class="pcart">{{user.cartCount}}</p>
@@ -53,10 +53,15 @@
         <h4>{{this.description}}</h4>
         <p>Stock: {{this.stock}}</p>
         <p>Price: {{this.price}}</p>
+
+        {{#if (eq this.owner ../user.email)}}
+         <br><br> <strong> <p>Este producto te pertenece, no puedes agregarlo al carrito</p></strong>
+        {{else}}
         <form action="/carts/{{../user.cart}}/products/{{this.id}}" method="POST">
             <input type="number" name="quantity" value="1" min="1" step="1" class="numput">
             <button type="submit">Agregar al carrito</button>
         </form>
+        {{/if}}
     </div>
     {{/each}}
 </div>
