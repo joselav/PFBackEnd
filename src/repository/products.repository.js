@@ -109,11 +109,10 @@ class ProductServices{
         try{
     
             const validate = title && description && price && code && category && stock && owner;
-            //Verificación que expresa que si no existe alguno de los campos, no se agregue el producto hasta que no se complete. 
-         if(!validate){
-            console.error("no ha sido posible subir producto, controla". error)
-           // return {success: false, message:"Todos los campos, a excepción del Thumbnails, son obligatorios"};
-             }
+                //Verificación que expresa que si no existe alguno de los campos, no se agregue el producto hasta que no se complete. 
+                if(!validate){
+                    console.error("no ha sido posible subir producto, controla". error)
+                }
            
              //Verigicación para que el código sea único.
             //El método "some()" sirve para verificar si al menos un elemento en el arreglo cumple con la condición expecificada. 
@@ -132,13 +131,14 @@ class ProductServices{
                 title, description, price, thumbnail, code, stock,category, status:true, owner
             }); 
     
-            return {success: true, message: `El producto se ha creado exitosamente ${newProduct}`}}
+            return {success: true, message: `El producto se ha creado exitosamente ${newProduct}`}
+        }
     
             catch(error){
                 console.error("Error al agregar producto:", error);
                 return { success: false, message: "Ha ocurrido un error al agregar el producto. Por favor, inténtalo de nuevo más tarde." };
             }
-        }
+    }
 
     async updateProduct(id,product){
         //El producto a actualizar primero debe leer el archivo, buscar el ID al que se llama y tomar acción desde ahí en adelante.
@@ -150,7 +150,7 @@ class ProductServices{
         }       
 
     
-    return {success: true, message: `Se ha actualizado el producto exitosamente: ${updateProdu}`};
+        return {success: true, message: `Se ha actualizado el producto exitosamente: ${updateProdu}`};
 
     }
 
@@ -174,10 +174,10 @@ class ProductServices{
         }
 
         return { success: true, message: "Stock actualizado correctamente" };
-    } catch (error) {
+        } catch (error) {
         console.error("Error interno al actualizar el stock del producto:", error);
         return { success: false, message: "Error interno al actualizar el stock del producto" };
-    }
+        }
         
        
     }
